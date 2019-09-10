@@ -23,8 +23,7 @@
     cursor: pointer;
     font-family: tesla, monospace;
     text-align: center;
-    height: 5vh;
-    font-size: 4vh;
+    padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,7 +39,7 @@
     transform-origin: top right;
     transform: skewY(-5deg);
     margin: 0 0 auto 0;
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
     text-align: center;
     color: transparent;
     background-image: linear-gradient(to right, #123f6d, purple);
@@ -53,16 +52,42 @@
     font-family: 'Roboto Mono', monospace;
 }
 
+#date-picker {
+    display: none;
+    justify-content: space-around;
+}
+
+#api-date {
+    border: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+#date-changer {
+    padding: 0.5rem;
+    font-size: 1rem;
+    background: none;
+    text-transform: uppercase;
+    border: 1px solid #4285F4;
+    color: #4285F4;
+    border-radius: 5px;
+    font-weight: 700;
+}
+
+#date-changer:hover, #date-changer:focus {
+    cursor: pointer;
+    background: #4285F4;
+    color: white;
+}
+
 /* LOADING */
 
 #loading {
     background: white;
-    position: absolute;
+    position: relative;
     width: 100vw;
-    height: 95vh;
-    top: 5vh;
     left: 0;
-    display: block;
+    display: none;
 }
 
 .dot-collision {
@@ -70,8 +95,8 @@
     width: 2.5vmin;
     height: 2.5vmin;
     border-radius: 50%;
-    left: 50%;
-    top: 50%;
+    left: 50vw;
+    top: 50vh;
     transform: translate(-50%, -50%);
     background-color: #123f6d;
 }
