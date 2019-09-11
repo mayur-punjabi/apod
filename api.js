@@ -1,20 +1,40 @@
-//setting explanation below title
 let degrees = 5;
 let title = document.getElementById("title");
 let explanation = document.getElementById("explanation");
 let loading = document.getElementById("loading");
 let datePicker = document.getElementById("date-picker");
-let radians = (degrees * Math.PI) / 180;
-let titleWidth = title.offsetWidth;
-let titleHeight = titleWidth * Math.tan(radians);
-explanation.style.marginTop = titleHeight + "px";
+let titleAndExplanation = document.querySelector("#title-explanation");
+
+const createTitleAndExplanation = () => {
+  if (title) {
+    title.remove();
+  }
+  if (explanation) {
+    explanation.remove();
+  }
+  title = document.createElement("p");
+  title.setAttribute("id", "title");
+  explanation = document.createElement("p");
+  explanation.setAttribute("id", "explanation");
+  titleAndExplanation.appendChild(title);
+  titleAndExplanation.appendChild(explanation);
+  let radians = (degrees * Math.PI) / 180;
+  let titleWidth = title.offsetWidth;
+  let titleHeight = titleWidth * Math.tan(radians);
+  explanation.style.marginTop = titleHeight + "px";
+};
 
 const getNasaData = date => {
   loading.style.display = "block";
-  title.textContent = "";
-  explanation.textContent = "";
 
-  //getting the APOD title and explanation
+  createTitleAndExplanation();
+
+  let typedOptions = {
+    strings: [],
+    typeSpeed: 50,
+    showCursor: false
+  };
+
   let url = date
     ? `${config.URL}?api_key=${config.api_key}&date=${date}`
     : `${config.URL}?api_key=${config.api_key}`;
@@ -23,27 +43,14 @@ const getNasaData = date => {
     .then(data => {
       title.textContent = data.title;
       loading.style.display = "none";
-      datePicker.style.display = "none";
       let dataToDisplay = data.msg || data.explanation;
-      new Typed("#explanation", {
-        strings: [dataToDisplay],
-        typeSpeed: 50,
-        onComplete: () => {
-          document.querySelectorAll(".typed-cursor")[0].style.display = "none";
-          datePicker.style.display = "flex";
-        }
-      });
+      typedOptions.strings = [dataToDisplay];
+      new Typed("#explanation", typedOptions);
     })
     .catch(() => {
       loading.style.display = "none";
-      new Typed("#explanation", {
-        strings: ["Failed to contact NASA."],
-        typeSpeed: 50,
-        onComplete: () => {
-          document.querySelectorAll(".typed-cursor")[0].style.display = "none";
-          datePicker.style.display = "flex";
-        }
-      });
+      typedOptions.strings = ["Failed to contact NASA."];
+      new Typed("#explanation", typedOptions);
     });
 };
 
@@ -55,14 +62,11 @@ flatpickr("#api-date", {
   minDate: "June 16, 1995",
   maxDate: "today",
   onChange: (selectedDates, dateStr, instance) => {
-    console.log(selectedDates);
-    let day = selectedDates[0].getDate();
-    let month = selectedDates[0].getMonth() + 1;
-    let year = selectedDates[0].getFullYear();
-    let dateToSearch = `${year}-${day}-${month}`;
+    let selectedDate = selectedDates[0];
+    let day = selectedDate.getDate();
+    let month = selectedDate.getMonth() + 1;
+    let year = selectedDate.getFullYear();
+    let dateToSearch = `${year}-${month}-${day}`;
     getNasaData(dateToSearch);
   }
-});
-document.getElementById("date-changer").addEventListener("click", () => {
-  document.getElementById("api-date").focus();
 });
