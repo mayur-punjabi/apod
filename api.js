@@ -12,7 +12,7 @@ const createTitleAndExplanation = () => {
   if (explanation) {
     explanation.remove();
   }
-  title = document.createElement("p");
+  title = document.createElement("h3");
   title.setAttribute("id", "title");
   explanation = document.createElement("p");
   explanation.setAttribute("id", "explanation");
