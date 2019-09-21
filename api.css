@@ -37,7 +37,7 @@
     text-transform: uppercase;
     font-weight: 700;
     text-align: center;
-    background:none;
+    background: none;
 }
 
 #title {
@@ -46,7 +46,7 @@
     transform-origin: top right;
     transform: skewY(-5deg);
     margin: 0 0 auto 0;
-    padding: 1rem 0.5rem;
+    padding: 0.5rem;
     text-align: center;
     color: transparent;
     background-image: linear-gradient(to right, #123f6d, purple);
@@ -56,6 +56,7 @@
 
 #explanation {
     padding: 1rem;
+    font-size: 1.25rem;
     font-family: 'Roboto Mono', monospace;
 }
 
