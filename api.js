@@ -33,7 +33,7 @@ const getNasaData = date => {
 
   let typedOptions = {
     strings: [],
-    typeSpeed: 5,
+    typeSpeed: 50,
     showCursor: false,
     onComplete: () => {
       clearInterval(scrollInterval);
