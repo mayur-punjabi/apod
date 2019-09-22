@@ -4,6 +4,8 @@ let explanation = document.getElementById("explanation");
 let loading = document.getElementById("loading");
 let datePicker = document.getElementById("date-picker");
 let titleAndExplanation = document.querySelector("#title-explanation");
+let body = document.body;
+let scrollInterval;
 
 const createTitleAndExplanation = () => {
   if (title) {
@@ -31,8 +33,11 @@ const getNasaData = date => {
 
   let typedOptions = {
     strings: [],
-    typeSpeed: 50,
-    showCursor: false
+    typeSpeed: 5,
+    showCursor: false,
+    onComplete: () => {
+      clearInterval(scrollInterval);
+    }
   };
 
   let url = date
@@ -41,6 +46,10 @@ const getNasaData = date => {
   fetch(url)
     .then(response => response.json())
     .then(data => {
+      scrollInterval = setInterval(() => {
+        body.scrollTop = body.scrollHeight;
+      }, 500);
+
       title.textContent = data.title;
       loading.style.display = "none";
       let dataToDisplay = data.msg || data.explanation;
