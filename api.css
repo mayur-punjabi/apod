@@ -64,8 +64,6 @@
 #loading {
     background: white;
     position: relative;
-    width: 100vw;
-    left: 0;
     display: none;
 }
 
@@ -75,7 +73,7 @@
     height: 2.5vmin;
     border-radius: 50%;
     left: 50vw;
-    top: 50vh;
+    top: 25vh;
     transform: translate(-50%, -50%);
     background-color: #123f6d;
 }

@@ -1,70 +1,78 @@
+// for styling the explanation
 let degrees = 5;
-let title = document.getElementById("title");
-let explanation = document.getElementById("explanation");
-let loading = document.getElementById("loading");
-let datePicker = document.getElementById("date-picker");
-let titleAndExplanation = document.querySelector("#title-explanation");
-let body = document.body;
+
+//getting the elements
+const typingElementID = "explanation";
+const title = document.getElementById("title");
+const explanation = document.getElementById(typingElementID);
+const loading = document.getElementById("loading");
+const datePicker = document.getElementById("date-picker");
+const body = document.body;
+
+//inerval for automatic scrolling
 let scrollInterval;
 
-const createTitleAndExplanation = () => {
-  if (title) {
-    title.remove();
+//typing variale and options
+let typed = undefined;
+const typedOptions = {
+  strings: [],
+  typeSpeed: 50,
+  showCursor: false,
+  onComplete: () => {
+    //stoppting scrolling after typed
+    clearInterval(scrollInterval);
   }
-  if (explanation) {
-    explanation.remove();
-  }
-  title = document.createElement("h3");
-  title.setAttribute("id", "title");
-  explanation = document.createElement("p");
-  explanation.setAttribute("id", "explanation");
-  titleAndExplanation.appendChild(title);
-  titleAndExplanation.appendChild(explanation);
-  let radians = (degrees * Math.PI) / 180;
-  let titleWidth = title.offsetWidth;
-  let titleHeight = titleWidth * Math.tan(radians);
+};
+
+//moving explanation below title because of skew on title
+const styleTitle = () => {
+  title.textContent = "";
+  const radians = (degrees * Math.PI) / 180;
+  const titleWidth = title.offsetWidth;
+  const titleHeight = titleWidth * Math.tan(radians);
   explanation.style.marginTop = titleHeight + "px";
 };
 
+//getting the title and explanation of the specified data
 const getNasaData = date => {
+  //showing the loading
   loading.style.display = "block";
 
-  createTitleAndExplanation();
+  //moving the explanation down
+  styleTitle();
 
-  let typedOptions = {
-    strings: [],
-    typeSpeed: 50,
-    showCursor: false,
-    onComplete: () => {
-      clearInterval(scrollInterval);
-    }
-  };
-
+  //getting today's data if no date is provided
   let url = date
     ? `${config.URL}?api_key=${config.api_key}&date=${date}`
     : `${config.URL}?api_key=${config.api_key}`;
   fetch(url)
     .then(response => response.json())
     .then(data => {
+      //starting scroll
       scrollInterval = setInterval(() => {
         body.scrollTop = body.scrollHeight;
       }, 500);
 
+      //showing title and hiding loading
       title.textContent = data.title;
       loading.style.display = "none";
+
+      //typing the explanation
       let dataToDisplay = data.msg || data.explanation;
       typedOptions.strings = [dataToDisplay];
-      new Typed("#explanation", typedOptions);
+      typed = new Typed(`#${typingElementID}`, typedOptions);
     })
     .catch(() => {
       loading.style.display = "none";
       typedOptions.strings = ["Failed to contact NASA."];
-      new Typed("#explanation", typedOptions);
+      typed = new Typed(`#${typingElementID}`, typedOptions);
     });
 };
 
+//calling for today's date
 getNasaData();
 
+//date picker
 flatpickr("#api-date", {
   dateFormat: "F j, Y",
   defaultDate: "today",
@@ -76,6 +84,11 @@ flatpickr("#api-date", {
     let month = selectedDate.getMonth() + 1;
     let year = selectedDate.getFullYear();
     let dateToSearch = `${year}-${month}-${day}`;
+
+    //reseting typed js object
+    if (typed && typed.constructor === Typed) typed.destroy();
+
+    //getting and showing the data of dateToSearch
     getNasaData(dateToSearch);
   }
 });
