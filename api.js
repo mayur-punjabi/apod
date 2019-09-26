@@ -48,6 +48,9 @@ const getNasaData = date => {
   fetch(url)
     .then(response => response.json())
     .then(data => {
+      //clearing previous scrollInterval in case of date change
+      if (scrollInterval) clearInterval(scrollInterval);
+
       //starting scroll
       scrollInterval = setInterval(() => {
         body.scrollTop = body.scrollHeight;
